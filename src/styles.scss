@@ -1,0 +1,34 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/scss/bootstrap';
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.bg-light-pink {
+  background-color: rgba(pink, 0.4) !important;
+}
+
+
+@mixin size-classes($i) {
+  .w-#{$i} {
+    width: '#{$i}%'
+  }
+
+  .h-#{$i} {
+    height: '#{$i}%'
+  }
+}
+
+
+@for $i from 1 through 100 {
+  @include size-classes($i);
+}
+
+.fullwd {
+  width: auto !important;
+}
