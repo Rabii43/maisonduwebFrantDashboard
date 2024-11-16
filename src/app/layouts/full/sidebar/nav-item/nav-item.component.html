@@ -1,4 +1,4 @@
-@if(item.navCap && !accessAdmin && item.navCap !== 'Dashboard') {
+@if(item.navCap && !accessAdmin && item.navCap == 'Dashboard') {
 <div mat-subheader class="nav-caption">
   {{ item.navCap }}
 </div>
@@ -7,7 +7,7 @@
   {{ item.navCap }}
 </div>
 } @if(!item.navCap && !item.external && !item.twoLines ) {
-<a *ngIf="!accessAdmin && item.displayName!=='Dashboard'"
+<a *ngIf="!accessAdmin && item.displayName=='Dashboard'"
   mat-list-item
   (click)="onItemSelected(item)"
   [ngClass]="{

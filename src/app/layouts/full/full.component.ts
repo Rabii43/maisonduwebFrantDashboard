@@ -1,10 +1,10 @@
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+import {Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Observable, Subscription} from 'rxjs';
 import {MatSidenav, MatSidenavContent, MatSidenavModule} from '@angular/material/sidenav';
 import {CoreService} from 'src/app/services/core.service';
 import {AppSettings} from 'src/app/app.config';
-import {filter, map} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {NavigationEnd, Router, RouterModule} from '@angular/router';
 import {navItems} from './sidebar/sidebar-data';
 import {AppNavItemComponent} from './sidebar/nav-item/nav-item.component';
@@ -48,7 +48,7 @@ const BELOWMONITOR = 'screen and (max-width: 1099px)';
   styleUrls: [],
   encapsulation: ViewEncapsulation.None,
 })
-export class FullComponent implements OnInit {
+export class FullComponent implements OnInit, OnDestroy {
   navItems = navItems;
   @ViewChild('leftsidenav')
   public sidenav: MatSidenav;
@@ -60,15 +60,16 @@ export class FullComponent implements OnInit {
   accessAdmin: boolean = false;
   user: UserApiModel;
   data$: Observable<any>;
+  user$ = this.store.select(selectUser);
+  role$ = this.store.select(selectRole);
+  loading$ = this.store.select(selectAuthLoading);
   protected readonly isUserSizesValid = isUserSizesValid;
   private layoutChangesSubscription = Subscription.EMPTY;
   private isMobileScreen = false;
   private isContentWidthFixed = true;
   private isCollapsedWidthFixed = false;
   private htmlElement!: HTMLHtmlElement;
-  user$ = this.store.select(selectUser);
-  role$ = this.store.select(selectRole);
-  loading$ = this.store.select(selectAuthLoading);
+
   constructor(
     private settings: CoreService,
     private router: Router,
@@ -135,9 +136,11 @@ export class FullComponent implements OnInit {
   receiveOptions(options: AppSettings): void {
     this.options = options;
   }
+
   signOut(): void {
-      this.store.dispatch(AuthActions.logout());
+    this.store.dispatch(AuthActions.logout());
   }
+
   ngOnDestroy() {
     this.layoutChangesSubscription.unsubscribe();
   }
