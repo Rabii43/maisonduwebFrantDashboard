@@ -142,9 +142,36 @@
   }
 }
 
+//dashboard drag and drop style
 .rounded-bars
   .apexcharts-bar-series.apexcharts-plot-series
   .apexcharts-series
   path {
   clip-path: inset(0 0 5% 0 round 20px);
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.grid-row {
+  display: flex;
+  gap: 16px;
+}
+
+.grid-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  cursor: grab;
+  width: 100%;
+}
+
+.grid-item:active {
+  cursor: grabbing;
 }

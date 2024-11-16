@@ -33,6 +33,10 @@ import {AppLatestDealsComponent} from "../../components/dashboard1/latest-deals/
 import {AppLatestReviewsComponent} from "../../components/dashboard1/latest-reviews/latest-reviews.component";
 import {AppPaymentsComponent} from "../../components/dashboard1/payments/payments.component";
 import {AppProductsComponent} from "../../components/dashboard1/products/products.component";
+import {WidgetEffects} from "../../store/widgets/widget.effects";
+import {widgetReducer} from "../../store/widgets/widget.reducer";
+import {StoreModule} from "@ngrx/store";
+import {EffectsModule} from "@ngrx/effects";
 
 
 
@@ -42,6 +46,8 @@ import {AppProductsComponent} from "../../components/dashboard1/products/product
     RouterModule.forChild(AppsRoutes),
     MaterialModule,
     FormsModule,
+    StoreModule.forFeature('widgets', widgetReducer),
+    EffectsModule.forFeature([WidgetEffects]),
     ReactiveFormsModule,
     NgxPermissionsModule.forRoot(),
     NgApexchartsModule,

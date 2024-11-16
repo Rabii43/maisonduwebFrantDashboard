@@ -1,24 +1,29 @@
-<div class="row">
-  <div class="col-lg-6">
-    <app-congratulate-card></app-congratulate-card>
-  </div>
-  <div class="col-lg-6">
-    <div class="row">
-      <div class="col-lg-6">
-        <app-payments></app-payments>
-      </div>
-      <div class="col-lg-6">
-        <app-products></app-products>
-      </div>
-      <div class="col-lg-6">
-        <app-latest-deals></app-latest-deals>
-      </div>
-      <div class="col-lg-6">
-        <app-customers></app-customers>
-      </div>
+<div class="dashboard-container" cdkDropList (cdkDropListDropped)="drop($event)">
+  <div
+    *ngFor="let row of rows$ | async"
+    class="grid-row"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="dropRow($event, row.id)"
+  >
+    <div
+      *ngFor="let page of row.pages"
+      class="grid-item"
+      cdkDrag
+      [ngClass]="page.size"
+    >
+      <ng-container [ngSwitch]="page.component">
+        <app-congratulate-card
+          *ngSwitchCase="'app-congratulate-card'"
+        ></app-congratulate-card>
+        <app-payments *ngSwitchCase="'app-payments'"></app-payments>
+        <app-products *ngSwitchCase="'app-products'"></app-products>
+        <app-latest-deals *ngSwitchCase="'app-latest-deals'"></app-latest-deals>
+        <app-customers *ngSwitchCase="'app-customers'"></app-customers>
+        <app-latest-reviews
+          *ngSwitchCase="'app-latest-reviews'"
+        ></app-latest-reviews>
+      </ng-container>
     </div>
-  </div>
-  <div class="col-12 mt-2">
-    <app-latest-reviews></app-latest-reviews>
   </div>
 </div>

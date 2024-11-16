@@ -11,6 +11,11 @@ import {AppTopProjectsComponent} from '../../../components/dashboard1/top-projec
 import {AppVisitUsaComponent} from '../../../components/dashboard1/visit-usa/visit-usa.component';
 import {AppLatestReviewsComponent} from '../../../components/dashboard1/latest-reviews/latest-reviews.component';
 import {AppLatestDealsComponent} from "../../../components/dashboard1/latest-deals/latest-deals.component";
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {AsyncPipe, NgClass, NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
+import {selectRows} from "../../../store/widgets/widget.selectors";
+import {Store} from "@ngrx/store";
+import {updateWidgets} from "../../../store/widgets/widget.actions";
 
 @Component({
   selector: 'app-dashboard1',
@@ -27,10 +32,44 @@ import {AppLatestDealsComponent} from "../../../components/dashboard1/latest-dea
     AppProductsComponent,
     AppLatestReviewsComponent,
     AppLatestDealsComponent,
+    CdkDropList,
+    CdkDrag,
+    NgForOf,
+    NgSwitch,
+    NgSwitchCase,
+    NgClass,
+    AsyncPipe,
   ],
   templateUrl: './dashboard1.component.html',
 })
 export class AppDashboard1Component {
-  constructor() {
+  rows$ = this.store.select(selectRows); // Use selector to retrieve rows from the store
+
+  constructor(private store: Store) {}
+
+  dropRow(event: CdkDragDrop<any[]>, rowId: number) {
+    this.rows$.subscribe((rows) => {
+      const row = rows.find((r) => r.id === rowId);
+      if (row) {
+        moveItemInArray(row.pages, event.previousIndex, event.currentIndex);
+        this.store.dispatch(updateWidgets({ rows })); // Dispatch updated rows to the store
+      }
+    });
+  }
+
+  drop(event: CdkDragDrop<any[]>) {
+    this.rows$.subscribe((rows) => {
+      if (event.container === event.previousContainer) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      }
+      this.store.dispatch(updateWidgets({ rows })); // Dispatch updated rows to the store
+    });
   }
 }
