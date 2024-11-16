@@ -1,30 +1,29 @@
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../../material.module';
-import { NgxPermissionsModule } from 'ngx-permissions';
+import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
+import {CommonModule, DatePipe} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MaterialModule} from '../../material.module';
+import {NgxPermissionsModule} from 'ngx-permissions';
 
-import { NgxPaginationModule } from 'ngx-pagination';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { HttpClientModule } from '@angular/common/http';
-import { AngularEditorModule } from '@kolkov/angular-editor';
-import { NgScrollbarModule } from 'ngx-scrollbar';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {NgApexchartsModule} from 'ng-apexcharts';
+import {HttpClientModule} from '@angular/common/http';
+import {AngularEditorModule} from '@kolkov/angular-editor';
+import {NgScrollbarModule} from 'ngx-scrollbar';
 
 // icons
-import { TablerIconsModule } from 'angular-tabler-icons';
+import {TablerIconsModule} from 'angular-tabler-icons';
 import * as TablerIcons from 'angular-tabler-icons/icons';
 
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 
-import { AppUserComponent } from './user/user.component';
-import { AppEmployeeDialogContentComponent } from './user/user.component';
-import { AppAddUserComponent } from './user/add/add.component';
+import {AppEmployeeDialogContentComponent, AppUserComponent} from './user/user.component';
+import {AppAddUserComponent} from './user/add/add.component';
 
-import { AppsRoutes } from './apps.routing';
-import { MatNativeDateModule } from '@angular/material/core';
+import {AppsRoutes} from './apps.routing';
+import {MatNativeDateModule} from '@angular/material/core';
 
 import {AppWidgetsComponent} from "./setting/widgets/widgets.component";
 import {AppCongratulateCardComponent} from "../../components/dashboard1/congratulate-card/congratulate-card.component";
@@ -37,7 +36,6 @@ import {WidgetEffects} from "../../store/widgets/widget.effects";
 import {widgetReducer} from "../../store/widgets/widget.reducer";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
-
 
 
 @NgModule({
@@ -78,4 +76,5 @@ import {EffectsModule} from "@ngrx/effects";
   ],
   providers: [DatePipe],
 })
-export class AppsModule {}
+export class AppsModule {
+}

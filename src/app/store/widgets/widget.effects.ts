@@ -1,17 +1,22 @@
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {updateWidgets} from './widget.actions';
-import {Store} from '@ngrx/store';
+// widget.effects.ts
+import { Injectable } from '@angular/core';
+import { Actions, ofType, createEffect } from '@ngrx/effects';
+import { updateWidgets } from './widget.actions';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class WidgetEffects {
-  saveWidgets$ = createEffect(() =>
+  saveWidgetsToLocalStorage$ = createEffect(
+    () =>
       this.actions$.pipe(
-        ofType(updateWidgets),
+        ofType(updateWidgets), // Listen for the `updateWidgets` action
+        tap(({ rows }) => {
+          // Save the rows data to localStorage when state is updated
+          localStorage.setItem('widgets', JSON.stringify({ rows }));
+        })
       ),
-    {dispatch: false}
+    { dispatch: false } // No action is dispatched as a result of this effect
   );
 
-  constructor(private actions$: Actions, private store: Store) {
-  }
+  constructor(private actions$: Actions) {}
 }

@@ -1,6 +1,7 @@
 import {Routes} from '@angular/router';
 import {AppUserComponent} from './user/user.component';
 import {AppWidgetsComponent} from "./setting/widgets/widgets.component";
+import {AppDashboard1Component} from "./dashboard/dashboard.component";
 
 
 export const AppsRoutes: Routes = [
@@ -14,6 +15,18 @@ export const AppsRoutes: Routes = [
       {
         path: 'setting-widgets',
         component: AppWidgetsComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    children: [
+      {
+        path: '',
+        component: AppDashboard1Component,
+        data: {
+          title: 'Dashboard',
+        },
       },
     ],
   },

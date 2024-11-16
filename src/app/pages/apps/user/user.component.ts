@@ -27,14 +27,13 @@ export class AppUserComponent implements AfterViewInit, OnInit {
   @ViewChild(MatTable, {static: true}) table: MatTable<any> = Object.create(null);
   searchText: any;
   users: UserApiModel[] = [];
-  localImagePath = 'assets/images/profile/user';
+  localImagePath = 'src/assets/images/profile/user2.jpg';
   displayedColumns: string[] = [
     '#',
     'name',
     'email',
     'mobile',
     'date of joining',
-    'action',
   ];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator = Object.create(null);
@@ -57,7 +56,7 @@ export class AppUserComponent implements AfterViewInit, OnInit {
   }
 
   rundomImage(): string {
-    return this.localImagePath + Math.floor(Math.random() * 8) + '.jpg';
+    return this.localImagePath +'2.jpg';
   }
 
   applyFilter(filterValue: string): void {

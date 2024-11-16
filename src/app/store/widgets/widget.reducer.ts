@@ -6,8 +6,18 @@ export interface WidgetState {
   rows: any[];
 }
 
-export const initialState: WidgetState = {
-  rows: [
+const loadStateFromLocalStorage = () => {
+  try {
+    const state = localStorage.getItem('widgets');
+    return state ? JSON.parse(state) : undefined; // If there's no data, return undefined
+  } catch (error) {
+    console.error('Error loading widgets from localStorage', error);
+    return undefined;
+  }
+};
+
+const initialState: WidgetState = {
+  rows: loadStateFromLocalStorage() || [
     {
       id: 1,
       pages: [
@@ -25,14 +35,15 @@ export const initialState: WidgetState = {
     },
     {
       id: 3,
-      pages: [
-        { id: 6, component: 'app-latest-reviews', size: 'col-lg-12' },
-      ],
+      pages: [{ id: 6, component: 'app-latest-reviews', size: 'col-lg-12' }],
     },
   ],
 };
 
 export const widgetReducer = createReducer(
   initialState,
-  on(updateWidgets, (state, { rows }) => ({ ...state, rows }))
+  on(updateWidgets, (state, { rows }) => ({
+    ...state,
+    rows: [...rows], // Update rows in the state
+  }))
 );

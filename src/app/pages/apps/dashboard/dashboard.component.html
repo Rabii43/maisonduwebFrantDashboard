@@ -3,6 +3,7 @@
     *ngFor="let row of rows$ | async"
     class="grid-row"
     cdkDropList
+    cdkDropListDisabled
     cdkDropListOrientation="horizontal"
     (cdkDropListDropped)="dropRow($event, row.id)"
   >

@@ -2,6 +2,8 @@
 import { createAction, props } from '@ngrx/store';
 
 export const updateWidgets = createAction(
-  '[Dashboard] Update Widgets',
+  '[Widgets] Update Widgets',
   props<{ rows: any[] }>()
 );
+
+export const loadWidgets = createAction('[Widgets] Load Widgets');

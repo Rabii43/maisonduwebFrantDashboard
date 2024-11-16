@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TablerIconsModule} from 'angular-tabler-icons';
 // components
 import {
@@ -15,10 +15,10 @@ import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} f
 import {AsyncPipe, NgClass, NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
 import {selectRows} from "../../../store/widgets/widget.selectors";
 import {Store} from "@ngrx/store";
-import {updateWidgets} from "../../../store/widgets/widget.actions";
+import {loadWidgets, updateWidgets} from "../../../store/widgets/widget.actions";
 
 @Component({
-  selector: 'app-dashboard1',
+  selector: 'app-dashboard',
   standalone: true,
   imports: [
     TablerIconsModule,
@@ -40,19 +40,27 @@ import {updateWidgets} from "../../../store/widgets/widget.actions";
     NgClass,
     AsyncPipe,
   ],
-  templateUrl: './dashboard1.component.html',
+  templateUrl: './dashboard.component.html',
 })
-export class AppDashboard1Component {
+export class AppDashboard1Component implements OnInit {
+
   rows$ = this.store.select(selectRows); // Use selector to retrieve rows from the store
 
-  constructor(private store: Store) {}
+  constructor(private store: Store) {
+  }
+
+  ngOnInit(): void {
+    console.log(this.rows$,'this row')
+    // Dispatch an action to load widgets from localStorage when app initializes
+    this.store.dispatch(loadWidgets());
+  }
 
   dropRow(event: CdkDragDrop<any[]>, rowId: number) {
     this.rows$.subscribe((rows) => {
       const row = rows.find((r) => r.id === rowId);
       if (row) {
         moveItemInArray(row.pages, event.previousIndex, event.currentIndex);
-        this.store.dispatch(updateWidgets({ rows })); // Dispatch updated rows to the store
+        this.store.dispatch(updateWidgets({rows})); // Dispatch updated rows to the store
       }
     });
   }
@@ -69,7 +77,7 @@ export class AppDashboard1Component {
           event.currentIndex
         );
       }
-      this.store.dispatch(updateWidgets({ rows })); // Dispatch updated rows to the store
+      this.store.dispatch(updateWidgets({rows})); // Dispatch updated rows to the store
     });
   }
 }
