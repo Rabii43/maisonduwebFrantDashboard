@@ -4,7 +4,7 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Observable} from 'rxjs';
 import {AuthService} from '../../_service/auth.service';
 import {TokenStorageService} from '../../_service/token-storage.service';
-import {baseUrlApi} from "../../../../../api/entryPoint";
+import {BASE_URL_API} from "../../../../../api/entryPoint";
 
 
 const TOKEN_HEADER_KEY = 'Authorization';
@@ -20,7 +20,7 @@ export class JwtInterceptor implements HttpInterceptor {
     // add auth header with jwt if user is logged in and request is to the api url
     const user = this.authService.userValue;
     const isLoggedIn = user && token;
-    const isApiUrl = request.url.startsWith(`${baseUrlApi}`);
+    const isApiUrl = request.url.startsWith(`${BASE_URL_API}`);
     if (isLoggedIn && isApiUrl) {
       if (token != null) {
         authRequest = this.addTokenHeader(request, token);

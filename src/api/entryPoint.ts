@@ -1,16 +1,16 @@
 
 // Urls base
 export const SERVER_URL = "https://a.com";
-export const baseUrl = "http://localhost:8005";
-export const baseUrlApi = baseUrl + "/api/";
-export const imageUrl = baseUrl + "/uploads/images/";
+export const BASE_URL = "http://localhost:8005";
+export const BASE_URL_API = BASE_URL + "/api/";
+export const imageUrl = BASE_URL + "/uploads/images/";
 
 // ****************** Auth Api *************************
-export const login = baseUrl + "/login";
-export const tokenRefresh = baseUrlApi + "token/refresh";
+export const LOGIN = BASE_URL + "/login";
+export const TOKEN_REFRESH = BASE_URL_API + "token/refresh";
 
 // ****************** User Api *************************
-export const user = baseUrlApi + "user";
-export const userProfile = user + "/editProfile";
-export const editPassowrd = baseUrlApi + "resetPassword";
-export const statusUser = baseUrlApi + "activateAccount";
+export const USER = BASE_URL_API + "user";
+export const USER_PROFILE = USER + "/editProfile";
+export const EDIT_PASSWORD = BASE_URL_API + "resetPassword";
+export const STATUS_USER = BASE_URL_API + "activateAccount";

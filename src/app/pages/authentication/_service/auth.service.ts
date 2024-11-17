@@ -10,7 +10,7 @@ class Token {
   refresh_token: string;
   expiresIn: number;
 }
-import {editPassowrd, login, tokenRefresh} from '../../../../api/entryPoint';
+import {EDIT_PASSWORD, LOGIN, TOKEN_REFRESH} from '../../../../api/entryPoint';
 import {TokenStorageService} from './token-storage.service';
 import {UserApiModel} from '../../_models/users';
 import * as moment from 'moment';
@@ -57,13 +57,13 @@ export class AuthService {
 
   // Sign-in
   login(email: string, password: string): Observable<any> {
-    return this.http.post<object>(login, {email, password}, httpOptions);
+    return this.http.post<object>(LOGIN, {email, password}, httpOptions);
   }
 
   // @ts-ignore
   refreshToken(): Observable<UserApiModel>{
     if (this.isLoggedIn.getValue()) {
-      return this.http.post<any>(tokenRefresh, {
+      return this.http.post<any>(TOKEN_REFRESH, {
         refresh_token: this.tokenStorage.getRefreshToken()}, httpOptions).pipe(
         tap((user) => {
           this.setSession(user);
@@ -75,7 +75,7 @@ export class AuthService {
   }
 
   editPassowrd(id: number, oldPpassword: string, newPassword: string): Observable<any> {
-    return this.http.post<any>(`${editPassowrd}`, {id: id, oldPpassword: oldPpassword, newPassword: newPassword});
+    return this.http.post<any>(`${EDIT_PASSWORD}`, {id: id, oldPpassword: oldPpassword, newPassword: newPassword});
   }
 
   decodeToken(): any {
