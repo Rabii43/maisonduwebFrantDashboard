@@ -9,7 +9,13 @@ export class WebsocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io('http://localhost:3000');
+    const websocketUrl = 'wss://ws.coinapi.io/v1/';
+    this.socket = io(websocketUrl, {
+      transports: ['websocket'],
+      query: {
+        api_key: 'B39295E9-1234-4E47-8425-E5B205D4304C',
+      }
+    });
   }
 
   listen(eventName: string): Observable<any> {
@@ -22,5 +28,10 @@ export class WebsocketService {
 
   emit(eventName: string, data: any) {
     this.socket.emit(eventName, data);
+  }
+
+  //close the connection
+  disconnect() {
+    this.socket.disconnect();
   }
 }

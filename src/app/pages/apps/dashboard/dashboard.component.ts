@@ -12,10 +12,11 @@ import {AppVisitUsaComponent} from '../../../components/dashboard1/visit-usa/vis
 import {AppLatestReviewsComponent} from '../../../components/dashboard1/latest-reviews/latest-reviews.component';
 import {AppLatestDealsComponent} from "../../../components/dashboard1/latest-deals/latest-deals.component";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {AsyncPipe, NgClass, NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
+import {AsyncPipe, CurrencyPipe, JsonPipe, NgClass, NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
 import {selectRows} from "../../../store/widgets/widget.selectors";
 import {Store} from "@ngrx/store";
 import {loadWidgets, updateWidgets} from "../../../store/widgets/widget.actions";
+import {WebsocketService} from "../../../websoketService/websoket.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -39,18 +40,27 @@ import {loadWidgets, updateWidgets} from "../../../store/widgets/widget.actions"
     NgSwitchCase,
     NgClass,
     AsyncPipe,
+    CurrencyPipe,
+    JsonPipe,
   ],
   templateUrl: './dashboard.component.html',
 })
 export class AppDashboard1Component implements OnInit {
 
   rows$ = this.store.select(selectRows); // Use selector to retrieve rows from the store
+  realTimeData: any;
 
-  constructor(private store: Store) {
+  constructor(
+    private store: Store,
+    private websocketService: WebsocketService) {
   }
 
   ngOnInit(): void {
-    console.log(this.rows$,'this row')
+    console.log(this.rows$, 'this row')
+    this.websocketService.listen('message').subscribe((data: any) => {
+      this.realTimeData = data;
+      console.log('Received real-time data:', data);
+    });
     // Dispatch an action to load widgets from localStorage when app initializes
     this.store.dispatch(loadWidgets());
   }
