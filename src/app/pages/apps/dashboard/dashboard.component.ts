@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {selectRows} from "../../../store/widgets/widget.selectors";
 import {Store} from "@ngrx/store";
@@ -40,10 +40,10 @@ export class AppDashboard1Component implements OnInit {
   rows$ = this.store.select(selectRows);
   // Real-time data observable
   realTimeData$: Observable<void>;
+  apollo: Apollo = inject(Apollo);
 
   constructor(
     private store: Store,
-    private apollo: Apollo,
     private websocketService: WebsocketService
   ) {
   }
@@ -80,10 +80,6 @@ export class AppDashboard1Component implements OnInit {
     });
   }
 
-  /**
-   * Handles drag-and-drop between containers.
-   * @param event - Drag-and-drop event
-   */
   drop(event: CdkDragDrop<any[]>): void {
     this.rows$.subscribe((rows) => {
       if (event.container === event.previousContainer) {
