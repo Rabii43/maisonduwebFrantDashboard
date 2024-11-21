@@ -36,9 +36,6 @@ import {EffectsModule} from "@ngrx/effects";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {reducers} from "./store";
 import {localStorageSync} from "ngrx-store-localstorage";
-import {InMemoryCache} from "@apollo/client/core";
-import {HttpLink} from "apollo-angular/http";
-import {APOLLO_OPTIONS} from "apollo-angular";
 
 export function localStorageSyncReducer(reducer: any) {
   return localStorageSync({
@@ -96,20 +93,6 @@ export function HttpLoaderFactory(http: HttpClient): any {
       deps: [AuthService]
     },
     {provide: LOCALE_ID, useValue: 'en-us'},
-    {
-      provide: APOLLO_OPTIONS,
-      useFactory: (httpLink: HttpLink) => ({
-        cache: new InMemoryCache(),
-        link: httpLink.create({
-          uri: 'https://choice-mackerel-46.hasura.app/v1/graphql',
-          headers: new HttpHeaders({
-            'x-hasura-admin-secret': 'e6msOMQXXPeufT44M4roPRUkjrS7POWJbbiSyu7NXpsN4ikrNDB74N2OBy46mo70',
-            'content-type': 'application/json',
-          }),
-        }),
-      }),
-      deps: [HttpLink],
-    },
   ],
   exports: [TablerIconsModule],
   bootstrap: [AppComponent],

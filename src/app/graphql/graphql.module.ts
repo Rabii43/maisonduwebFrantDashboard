@@ -1,19 +1,28 @@
 import { NgModule } from '@angular/core';
-import {APOLLO_OPTIONS } from 'apollo-angular';
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache } from '@apollo/client/core';
+import {HttpHeaders} from "@angular/common/http";
 
+
+export function createApollo(httpLink: HttpLink) {
+  return {
+    link: httpLink.create({
+      uri: 'https://choice-mackerel-46.hasura.app/v1/graphql',
+      headers: new HttpHeaders({
+        'x-hasura-admin-secret': 'e6msOMQXXPeufT44M4roPRUkjrS7POWJbbiSyu7NXpsN4ikrNDB74N2OBy46mo70',
+        'content-type': 'application/json',
+      }),
+    }),
+    cache: new InMemoryCache(),
+  };
+}
 @NgModule({
-  imports: [],
+  exports: [ApolloModule],
   providers: [
     {
       provide: APOLLO_OPTIONS,
-      useFactory: (httpLink: HttpLink) => {
-        return {
-          cache: new InMemoryCache(),
-          link: httpLink.create({ uri: 'https://choice-mackerel-46.hasura.app/v1/graphql' }),
-        };
-      },
+      useFactory: createApollo,
       deps: [HttpLink],
     },
   ],

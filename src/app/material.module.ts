@@ -72,7 +72,6 @@ import {MatTableModule} from '@angular/material/table';
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatRippleModule,
-    MatBottomSheetModule,
     MatDialogModule,
     MatSnackBarModule,
     MatTooltipModule,

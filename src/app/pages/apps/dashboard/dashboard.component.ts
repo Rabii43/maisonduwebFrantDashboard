@@ -1,71 +1,76 @@
 import {Component, OnInit} from '@angular/core';
-import {TablerIconsModule} from 'angular-tabler-icons';
-// components
-import {
-  AppCongratulateCardComponent
-} from '../../../components/dashboard1/congratulate-card/congratulate-card.component';
-import {AppPaymentsComponent} from '../../../components/dashboard1/payments/payments.component';
-import {AppProductsComponent} from '../../../components/dashboard1/products/products.component';
-import {AppCustomersComponent} from '../../../components/dashboard1/customers/customers.component';
-import {AppTopProjectsComponent} from '../../../components/dashboard1/top-projects/top-projects.component';
-import {AppVisitUsaComponent} from '../../../components/dashboard1/visit-usa/visit-usa.component';
-import {AppLatestReviewsComponent} from '../../../components/dashboard1/latest-reviews/latest-reviews.component';
-import {AppLatestDealsComponent} from "../../../components/dashboard1/latest-deals/latest-deals.component";
-import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {AsyncPipe, CurrencyPipe, JsonPipe, NgClass, NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {selectRows} from "../../../store/widgets/widget.selectors";
 import {Store} from "@ngrx/store";
 import {loadWidgets, updateWidgets} from "../../../store/widgets/widget.actions";
 import {WebsocketService} from "../../../websoketService/websoket.service";
+import {Apollo, gql} from "apollo-angular";
+import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
+
+// Define the interface for your real-time data
+interface DashTable {
+  id: string;
+  currency_pair: string;
+  rate: number;
+  timestamp: string;
+}
+
+// GraphQL subscription query
+const GET_REALTIME_CURRENCY_RATES = gql`
+  subscription {
+    currency_rates {
+      id
+      currency_pair
+      rate
+      timestamp
+    }
+  }
+`;
+
+class resonance {
+  currency: DashTable[];
+}
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
-  imports: [
-    TablerIconsModule,
-    AppCongratulateCardComponent,
-    AppCustomersComponent,
-    AppProductsComponent,
-    AppTopProjectsComponent,
-    AppPaymentsComponent,
-    AppLatestDealsComponent,
-    AppVisitUsaComponent,
-    AppProductsComponent,
-    AppLatestReviewsComponent,
-    AppLatestDealsComponent,
-    CdkDropList,
-    CdkDrag,
-    NgForOf,
-    NgSwitch,
-    NgSwitchCase,
-    NgClass,
-    AsyncPipe,
-    CurrencyPipe,
-    JsonPipe,
-  ],
   templateUrl: './dashboard.component.html',
 })
 export class AppDashboard1Component implements OnInit {
-
-  rows$ = this.store.select(selectRows); // Use selector to retrieve rows from the store
-  realTimeData: any;
+  rows$ = this.store.select(selectRows);
+  // Real-time data observable
+  realTimeData$: Observable<void>;
 
   constructor(
     private store: Store,
-    private websocketService: WebsocketService) {
+    private apollo: Apollo,
+    private websocketService: WebsocketService
+  ) {
   }
 
   ngOnInit(): void {
-    console.log(this.rows$, 'this row')
-    this.websocketService.listen('message').subscribe((data: any) => {
-      this.realTimeData = data;
-      console.log('Received real-time data:', data);
-    });
-    // Dispatch an action to load widgets from localStorage when app initializes
+    // Dispatch action to load widgets when the component initializes
     this.store.dispatch(loadWidgets());
+    // Subscribe to the real-time currency rates
+    this.subscribeToRealTimeCurrencyRates();
   }
 
-  dropRow(event: CdkDragDrop<any[]>, rowId: number) {
+  subscribeToRealTimeCurrencyRates(): void {
+    this.realTimeData$ = this.apollo.subscribe<resonance>({
+      query: GET_REALTIME_CURRENCY_RATES,
+    }).pipe(
+      map(result => {
+        result.data?.currency
+      })
+    );
+    // Log the real-time data
+    this.realTimeData$.subscribe(
+      data => console.log('Real-time data:', data),
+      error => console.error('Subscription error:', error)
+    );
+  }
+
+  dropRow(event: CdkDragDrop<any[]>, rowId: number): void {
     this.rows$.subscribe((rows) => {
       const row = rows.find((r) => r.id === rowId);
       if (row) {
@@ -75,7 +80,11 @@ export class AppDashboard1Component implements OnInit {
     });
   }
 
-  drop(event: CdkDragDrop<any[]>) {
+  /**
+   * Handles drag-and-drop between containers.
+   * @param event - Drag-and-drop event
+   */
+  drop(event: CdkDragDrop<any[]>): void {
     this.rows$.subscribe((rows) => {
       if (event.container === event.previousContainer) {
         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);

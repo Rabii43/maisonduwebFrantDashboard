@@ -22,7 +22,7 @@ export const AppsRoutes: Routes = [
     path: '',
     children: [
       {
-        path: '',
+        path: 'dashboards',
         component: AppDashboard1Component,
         data: {
           title: 'Dashboard',

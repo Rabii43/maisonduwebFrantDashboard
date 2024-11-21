@@ -14,13 +14,13 @@ const routes: Routes = [
         redirectTo: '/authentication/login',
         pathMatch: 'full',
       },
-      {
-        path: 'dashboards',
-        canActivate: [AuthGuard],
-        loadComponent: () =>
-          import('./pages/apps/dashboard/dashboard.component').then(
-            (c) => c.AppDashboard1Component),
-      },
+      // {
+      //   path: 'dashboards',
+      //   canActivate: [AuthGuard],
+      //   loadComponent: () =>
+      //     import('./pages/apps/dashboard/dashboard.component').then(
+      //       (c) => c.AppDashboard1Component),
+      // },
       {
         path: '',
         canActivate: [AuthGuard],

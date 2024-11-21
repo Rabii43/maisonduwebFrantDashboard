@@ -1,14 +1,25 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {CommonModule, DatePipe} from '@angular/common';
+import {
+  AsyncPipe,
+  CommonModule,
+  CurrencyPipe,
+  DatePipe,
+  JsonPipe,
+  NgClass,
+  NgForOf,
+  NgIf,
+  NgSwitch,
+  NgSwitchCase
+} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MaterialModule} from '../../material.module';
 import {NgxPermissionsModule} from 'ngx-permissions';
 
 import {NgxPaginationModule} from 'ngx-pagination';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDropList, DragDropModule} from '@angular/cdk/drag-drop';
 import {NgApexchartsModule} from 'ng-apexcharts';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HttpHeaders} from '@angular/common/http';
 import {AngularEditorModule} from '@kolkov/angular-editor';
 import {NgScrollbarModule} from 'ngx-scrollbar';
 
@@ -36,6 +47,12 @@ import {WidgetEffects} from "../../store/widgets/widget.effects";
 import {widgetReducer} from "../../store/widgets/widget.reducer";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
+import {AppDashboard1Component} from "./dashboard/dashboard.component";
+import {AppTopProjectsComponent} from "../../components/dashboard1/top-projects/top-projects.component";
+import {AppVisitUsaComponent} from "../../components/dashboard1/visit-usa/visit-usa.component";
+import {APOLLO_OPTIONS} from "apollo-angular";
+import {HttpLink} from "apollo-angular/http";
+import {InMemoryCache} from "@apollo/client/core";
 
 
 @NgModule({
@@ -43,6 +60,27 @@ import {EffectsModule} from "@ngrx/effects";
     CommonModule,
     RouterModule.forChild(AppsRoutes),
     MaterialModule,
+    TablerIconsModule,
+    AppCongratulateCardComponent,
+    AppCustomersComponent,
+    AppProductsComponent,
+    AppTopProjectsComponent,
+    AppPaymentsComponent,
+    AppLatestDealsComponent,
+    AppVisitUsaComponent,
+    AppProductsComponent,
+    AppLatestReviewsComponent,
+    AppLatestDealsComponent,
+    CdkDropList,
+    CdkDrag,
+    NgForOf,
+    NgSwitch,
+    NgSwitchCase,
+    NgClass,
+    AsyncPipe,
+    CurrencyPipe,
+    JsonPipe,
+    NgIf,
     FormsModule,
     StoreModule.forFeature('widgets', widgetReducer),
     EffectsModule.forFeature([WidgetEffects]),
@@ -73,8 +111,23 @@ import {EffectsModule} from "@ngrx/effects";
     AppUserComponent,
     AppEmployeeDialogContentComponent,
     AppAddUserComponent,
+    AppDashboard1Component
   ],
-  providers: [DatePipe],
+  providers: [DatePipe,
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory: (httpLink: HttpLink) => ({
+        cache: new InMemoryCache(),
+        link: httpLink.create({
+          uri: 'https://choice-mackerel-46.hasura.app/v1/graphql',
+          headers: new HttpHeaders({
+            'x-hasura-admin-secret': 'e6msOMQXXPeufT44M4roPRUkjrS7POWJbbiSyu7NXpsN4ikrNDB74N2OBy46mo70',
+            'content-type': 'application/json',
+          }),
+        }),
+      }),
+      deps: [HttpLink],
+    },],
 })
 export class AppsModule {
 }

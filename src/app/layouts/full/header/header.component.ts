@@ -88,7 +88,7 @@ export class HeaderComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up subscriptions
+    // Clean up subscriptions.ts
     this.subscriptions.unsubscribe();
   }
 }

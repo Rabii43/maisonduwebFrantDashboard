@@ -1,10 +1,28 @@
 <div class="dashboard-container" cdkDropList (cdkDropListDropped)="drop($event)">
-  <div class="dashboard">
-    <h1> Financial Data</h1>
-    <div *ngIf="realTimeData">
-      <pre>{{ realTimeData | json }}</pre>
-    </div>
+  <div>
+    <h1>Real-Time Currency Rates</h1>
+    <table>
+      <thead>
+      <tr>
+        <th>Currency Pair</th>
+        <th>Rate</th>
+        <th>Timestamp</th>
+      </tr>
+      </thead>
+      <tbody>
+<!--      <tr *ngFor="let rate of realTimeData|async">-->
+<!--        <td>{{ rate?.currency_pair }}</td>-->
+<!--        <td>{{ rate?.rate }}</td>-->
+<!--        <td>{{ rate?.timestamp }}</td>-->
+<!--      </tr>-->
+      </tbody>
+    </table>
   </div>
+
+  <div>
+    <p>No real-time data available yet.</p>
+  </div>
+
   <div
     *ngFor="let row of rows$ | async"
     class="grid-row"
