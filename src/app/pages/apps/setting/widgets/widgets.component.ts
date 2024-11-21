@@ -10,11 +10,12 @@ import {AppPaymentsComponent} from "../../../../components/dashboard1/payments/p
 import {AppLatestDealsComponent} from "../../../../components/dashboard1/latest-deals/latest-deals.component";
 import {AppVisitUsaComponent} from "../../../../components/dashboard1/visit-usa/visit-usa.component";
 import {AppLatestReviewsComponent} from "../../../../components/dashboard1/latest-reviews/latest-reviews.component";
-import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {AsyncPipe, NgClass, NgForOf, NgSwitch, NgSwitchCase} from "@angular/common";
 import {updateWidgets} from "../../../../store/widgets/widget.actions";
 import {Store} from "@ngrx/store";
 import {selectRows} from "../../../../store/widgets/widget.selectors";
+import {take} from "rxjs";
 
 @Component({
   selector: 'app-setting',
@@ -43,31 +44,23 @@ import {selectRows} from "../../../../store/widgets/widget.selectors";
 export class AppWidgetsComponent {
   rows$ = this.store.select(selectRows); // Use selector to retrieve rows from the store
 
-  constructor(private store: Store) {}
-
-  dropRow(event: CdkDragDrop<any[]>, rowId: number) {
-    this.rows$.subscribe((rows) => {
-      const row = rows.find((r) => r.id === rowId);
-      if (row) {
-        moveItemInArray(row.pages, event.previousIndex, event.currentIndex);
-        this.store.dispatch(updateWidgets({ rows })); // Dispatch updated rows to the store
-      }
-    });
+  constructor(private store: Store) {
   }
 
-  drop(event: CdkDragDrop<any[]>) {
-    this.rows$.subscribe((rows) => {
-      if (event.container === event.previousContainer) {
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      } else {
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
+  dropRow(event: CdkDragDrop<any[]>, rowId: number): void {
+    this.rows$.pipe(take(1)).subscribe((rows) => {
+      const row = rows.find((r) => r.id === rowId);
+      if (row) {
+        // Create copy of the pages array
+        const updatedPages = [...row.pages];
+        moveItemInArray(updatedPages, event.previousIndex, event.currentIndex);
+        // Create a new rows array with the updated row
+        const updatedRows = rows.map((r) =>
+          r.id === rowId ? {...r, pages: updatedPages} : r
         );
+        // Dispatch the updated rows to the store
+        this.store.dispatch(updateWidgets({rows: updatedRows}));
       }
-      this.store.dispatch(updateWidgets({ rows })); // Dispatch updated rows to the store
     });
   }
 }

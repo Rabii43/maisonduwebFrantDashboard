@@ -1,8 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {selectRows} from "../../../store/widgets/widget.selectors";
 import {Store} from "@ngrx/store";
-import {loadWidgets, updateWidgets} from "../../../store/widgets/widget.actions";
+import {loadWidgets} from "../../../store/widgets/widget.actions";
 import {WebsocketService} from "../../../websoketService/websoket.service";
 import {Apollo, gql} from "apollo-angular";
 import {Observable} from "rxjs";
@@ -49,7 +48,6 @@ export class AppDashboard1Component implements OnInit {
   }
 
   ngOnInit(): void {
-    // Dispatch action to load widgets when the component initializes
     this.store.dispatch(loadWidgets());
     // Subscribe to the real-time currency rates
     this.subscribeToRealTimeCurrencyRates();
@@ -68,31 +66,5 @@ export class AppDashboard1Component implements OnInit {
       data => console.log('Real-time data:', data),
       error => console.error('Subscription error:', error)
     );
-  }
-
-  dropRow(event: CdkDragDrop<any[]>, rowId: number): void {
-    this.rows$.subscribe((rows) => {
-      const row = rows.find((r) => r.id === rowId);
-      if (row) {
-        moveItemInArray(row.pages, event.previousIndex, event.currentIndex);
-        this.store.dispatch(updateWidgets({rows})); // Dispatch updated rows to the store
-      }
-    });
-  }
-
-  drop(event: CdkDragDrop<any[]>): void {
-    this.rows$.subscribe((rows) => {
-      if (event.container === event.previousContainer) {
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      } else {
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-        );
-      }
-      this.store.dispatch(updateWidgets({rows})); // Dispatch updated rows to the store
-    });
   }
 }
